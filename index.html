@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="mobile-app">
+    <!-- Header -->
+    <header class="top-bar">
+      <div class="logo-area">
+        <div class="logo-icon">₫</div>
+        <span class="app-name">Expense Manager</span>
+      </div>
+
+      <button id="languageToggle" class="language-btn">Tiếng Việt</button>
+    </header>
+
+    <!-- Intro Section -->
+    <section class="intro-section" id="introSection">
+      <div class="slide-content" id="slideContent">
+        <div class="visual-area">
+          <div id="visualCard" class="visual-card">
+            <div id="visualTop" class="visual-top">💸</div>
+            <div id="visualMiddle" class="visual-middle">Expense Manager</div>
+            <div id="visualBottom" class="visual-bottom">Quản lý chi tiêu thông minh</div>
+          </div>
+        </div>
+
+        <div class="service-list">
+          <div class="service-item">
+            <div class="service-icon green" id="serviceIcon1">💸</div>
+            <p id="service1">Giảm các khoản chi không cần thiết</p>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon dark" id="serviceIcon2">🐷</div>
+            <p id="service2">Tiết kiệm đều đặn hằng tháng</p>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon yellow" id="serviceIcon3">📊</div>
+            <p id="service3">Quản lý tài chính tất cả ở một nơi</p>
+          </div>
+        </div>
+
+        <div class="hero-text">
+          <h1 id="heroTitle">Quản lý tài chính hiệu quả với Expense Manager</h1>
+          <div class="dots" id="dotsContainer">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
+            <span class="dot" data-index="4"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-actions">
+        <button id="openRegisterBtn" class="primary-btn">Đăng ký miễn phí</button>
+        <button id="openLoginBtn" class="secondary-btn">Đăng nhập</button>
+      </div>
+    </section>
+
+    <!-- Message -->
+    <div id="messageBox" class="message-box"></div>
+
+    <!-- Register Form -->
+    <section id="registerSection" class="auth-section hidden">
+      <div class="auth-card">
+        <button class="back-btn" onclick="showIntro()">←</button>
+        <h2 id="registerTitle">Tạo tài khoản</h2>
+        <p id="registerDesc">Đăng ký để bắt đầu quản lý chi tiêu của bạn</p>
+
+        <form id="registerForm" class="auth-form">
+  <input type="text" id="registerName" placeholder="Nhập tên người dùng" required />
+  <input type="email" id="registerEmail" placeholder="Nhập email" required />
+  <input type="password" id="registerPassword" placeholder="Mật khẩu ít nhất 8 ký tự, có chữ hoa, chữ thường và số" required />
+  <button type="submit" class="primary-btn">Đăng ký</button>
+</form>
+
+        <p class="switch-text">
+          <span id="haveAccountText">Đã có tài khoản?</span>
+          <button type="button" class="link-btn" id="switchToLogin">Đăng nhập</button>
+        </p>
+      </div>
+    </section>
+
+    <!-- Login Form -->
+    <section id="loginSection" class="auth-section hidden">
+      <div class="auth-card">
+        <button class="back-btn" onclick="showIntro()">←</button>
+        <h2 id="loginTitle">Đăng nhập</h2>
+        <p id="loginDesc">Chào mừng bạn quay trở lại</p>
+
+        <form id="loginForm" class="auth-form">
+          <input type="email" id="loginEmail" placeholder="Nhập email" required />
+          <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" required />
+          <button type="submit" class="primary-btn">Đăng nhập</button>
+        </form>
+
+        <p class="forgot-text">
+          <button type="button" class="link-btn" id="forgotPasswordBtn">Quên mật khẩu?</button>
+        </p>
+
+        <p class="switch-text">
+          <span id="noAccountText">Chưa có tài khoản?</span>
+          <button type="button" class="link-btn" id="switchToRegister">Đăng ký</button>
+        </p>
+      </div>
+    </section>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Quên mật khẩu</h2>
+        <p class="modal-desc">Nhập email để nhận mã OTP đặt lại mật khẩu.</p>
+
+        <input type="email" id="forgotEmail" placeholder="Nhập email của bạn" />
+
+        <button type="button" id="sendOtpBtn" class="primary-btn">Gửi mã OTP</button>
+
+        <input type="text" id="otpInput" placeholder="Nhập mã OTP" />
+
+        <input type="password" id="newPassword" placeholder="Mật khẩu mới" />
+
+        <button type="button" id="resetPasswordBtn" class="primary-btn">Đặt lại mật khẩu</button>
+
+        <button type="button" id="closeForgotModal" class="secondary-btn">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
