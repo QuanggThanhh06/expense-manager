@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Wallet</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Tổng quan -->
+    <section id="overviewPage" class="page active-page">
+      <header class="top-header">
+        <div>
+          <h1 id="walletBalance">0 đ</h1>
+          <p>Tổng số dư</p>
+        </div>
+       <div class="header-icons">
+  <button id="openSearchBtn" class="icon-btn">🔍</button>
+
+  <button id="openNotificationBtn" class="icon-btn notification-btn">
+    🔔
+    <span id="notificationDot" class="notification-dot hidden"></span>
+  </button>
+</div>
+      </header>
+
+      <div class="card wallet-card">
+        <div class="card-title">
+          <h2>Ví của tôi</h2>
+          <span id="viewWalletHistoryBtn">Xem tất cả</span>
+        </div>
+        <div class="wallet-row">
+          <div class="wallet-icon">👛</div>
+          <p>Ví tiền ảo</p>
+          <strong id="walletMiniBalance">0 đ</strong>
+        </div>
+      </div>
+
+      <div class="report-mode-tabs">
+  <button class="report-mode-btn active" data-mode="day">Ngày</button>
+  <button class="report-mode-btn" data-mode="month">Tháng</button>
+  <button class="report-mode-btn" data-mode="year">Năm</button>
+</div>
+
+      <div class="report-time-nav">
+  <button id="prevPeriodBtn">‹</button>
+  <div class="current-period">
+    <span>📅</span>
+    <strong id="currentPeriodText">Tháng này</strong>
+  </div>
+  <button id="nextPeriodBtn">›</button>
+</div>
+
+<div class="section-title">
+  <h2>Báo cáo chi tiêu</h2>
+  <span id="viewReportBtn">Xem báo cáo</span>
+</div>
+
+      <div class="card report-card">
+        <div class="report-summary">
+          <div>
+            <p>Tổng đã chi</p>
+            <strong id="totalExpense">0 đ</strong>
+          </div>
+          <div>
+            <p>Tổng thu</p>
+            <strong id="totalIncome">0 đ</strong>
+          </div>
+        </div>
+        <div class="bar-report">
+  <div class="bar-item">
+    <div class="bar-track">
+      <div id="expenseBar" class="bar-fill expense-bar"></div>
+    </div>
+    <p>Chi</p>
+  </div>
+
+  <div class="bar-item">
+    <div class="bar-track">
+      <div id="incomeBar" class="bar-fill income-bar"></div>
+    </div>
+    <p>Thu</p>
+  </div>
+</div>
+      </div>
+
+      <div class="section-title">
+        <h2>Chi tiêu nhiều nhất</h2>
+        <span id="topSpendingDetailBtn">Xem chi tiết</span>
+      </div>
+
+      <div class="card top-spending-card" id="topSpendingList">
+        <p class="empty-text">Chưa có dữ liệu chi tiêu</p>
+      </div>
+    </section>
+
+    <!-- Lịch sử giao dịch -->
+    <section id="historyPage" class="page">
+      <h1 class="page-title">Lịch sử giao dịch</h1>
+
+     <div class="filter-card modern-filter">
+  <div class="filter-header">
+    <div>
+      <h2>Bộ lọc giao dịch</h2>
+      <p>Khoanh vùng giao dịch theo thời gian</p>
+    </div>
+    <span class="filter-icon">📅</span>
+  </div>
+
+  <div class="quick-filter-row">
+    <button type="button" class="quick-filter-btn" data-filter="today">Hôm nay</button>
+    <button type="button" class="quick-filter-btn" data-filter="week">Tuần này</button>
+    <button type="button" class="quick-filter-btn active" data-filter="month">Tháng này</button>
+  </div>
+
+  <div class="date-filter-grid">
+    <div class="date-field">
+      <label>Từ ngày</label>
+      <input type="date" id="fromDate" />
+    </div>
+
+    <div class="date-field">
+      <label>Đến ngày</label>
+      <input type="date" id="toDate" />
+    </div>
+  </div>
+
+  <div class="filter-actions">
+    <button id="filterBtn">Áp dụng lọc</button>
+    <button id="clearFilterBtn" class="gray-btn">Đặt lại</button>
+  </div>
+</div>
+
+      <div id="transactionList" class="transaction-list"></div>
+    </section>
+
+    <!-- Thêm giao dịch -->
+    <section id="addPage" class="page">
+      <h1 class="page-title">Thêm giao dịch</h1>
+
+      <div class="quick-actions-grid" id="quickActionsGrid"></div>
+
+      <div class="card form-card">
+        <h2 id="payFormTitle">Thanh toán hóa đơn</h2>
+
+        <div class="card scan-card">
+  <h2>Quét nhanh</h2>
+
+  <div class="scan-actions">
+    <button type="button" id="startQrBtn">Quét QR</button>
+    <button type="button" id="stopQrBtn" class="gray-btn">Dừng QR</button>
+  </div>
+
+  <div id="qrReader" class="qr-reader hidden"></div>
+
+  <div class="ocr-box">
+    <label>Chọn ảnh hóa đơn để OCR</label>
+    <input type="file" id="receiptImage" accept="image/*" />
+
+    <button type="button" id="scanOcrBtn">Quét hóa đơn OCR</button>
+
+    <img id="receiptPreview" class="receipt-preview hidden" alt="Ảnh hóa đơn" />
+
+    <p id="scanStatus" class="scan-status"></p>
+
+    <textarea id="ocrResultText" class="ocr-result hidden" readonly></textarea>
+  </div>
+</div>
+
+        <form id="payForm">
+          <select id="serviceType" required>
+  <option value="">-- Chọn dịch vụ --</option>
+</select>
+
+           
+          <input type="number" id="payAmount" placeholder="Số tiền thanh toán" required />
+          <textarea id="payNote" placeholder="Ghi chú"></textarea>
+
+          <button type="submit">Thanh toán</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Ví tiền -->
+    <section id="walletPage" class="page">
+  <h1 class="page-title">Ví tiền ảo</h1>
+
+  <div class="wallet-balance-box">
+    <p>Số dư hiện tại</p>
+    <h1 id="walletPageBalance">0 đ</h1>
+  </div>
+
+  <div class="card form-card">
+    <h2>Nạp tiền vào ví</h2>
+    <p class="form-desc">Đây là chức năng nạp tiền demo, không liên kết ngân hàng thật.</p>
+
+    <form id="topupForm">
+      <label>Số tiền muốn nạp</label>
+      <input type="number" id="topupAmount" placeholder="Ví dụ: 500000" required />
+
+      <label>Nguồn tiền demo</label>
+      <select id="topupMethod" required>
+        <option value="">-- Chọn nguồn nạp --</option>
+        <option value="Thẻ ngân hàng demo">Thẻ ngân hàng demo</option>
+        <option value="Ví liên kết demo">Ví liên kết demo</option>
+        <option value="Tiền mặt demo">Tiền mặt demo</option>
+      </select>
+
+      <div class="quick-money">
+        <button type="button" onclick="setTopupAmount(50000)">50.000</button>
+        <button type="button" onclick="setTopupAmount(100000)">100.000</button>
+        <button type="button" onclick="setTopupAmount(200000)">200.000</button>
+        <button type="button" onclick="setTopupAmount(500000)">500.000</button>
+        <button type="button" onclick="setTopupAmount(1000000)">1.000.000</button>
+        <button type="button" onclick="setTopupAmount(2000000)">2.000.000</button>
+      </div>
+
+      <button type="submit">Nạp tiền</button>
+    </form>
+  </div>
+
+  <div id="topupSuccessModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="success-icon">✓</div>
+      <h2>Nạp tiền thành công</h2>
+      <p id="topupSuccessText">Bạn đã nạp tiền vào ví.</p>
+      <button id="closeTopupModal">Hoàn tất</button>
+    </div>
+  </div>
+</section>
+
+    <!-- Tài khoản -->
+    <section id="accountPage" class="page">
+  <h1 class="page-title">Tài khoản</h1>
+
+  <div class="card account-card">
+    <div class="avatar-wrapper">
+      <img id="avatarPreview" class="avatar-img hidden" alt="Avatar" />
+      <div id="defaultAvatar" class="avatar">👤</div>
+    </div>
+
+    <h2 id="accountName">Tên người dùng</h2>
+    <p id="accountEmail">user@email.com</p>
+  </div>
+
+  <div class="account-menu">
+    <button type="button" id="toggleAvatarFormBtn" class="account-menu-btn">
+      <span>🖼️</span>
+      <div>
+        <strong>Cập nhật ảnh đại diện</strong>
+        <p>Thay đổi hình ảnh tài khoản</p>
+      </div>
+      <b>›</b>
+    </button>
+
+    <button type="button" id="togglePasswordFormBtn" class="account-menu-btn">
+      <span>🔐</span>
+      <div>
+        <strong>Đổi mật khẩu</strong>
+        <p>Bảo mật tài khoản của bạn</p>
+      </div>
+      <b>›</b>
+    </button>
+  </div>
+
+  <div id="avatarFormBox" class="card account-setting-card hidden">
+    <h2>Cập nhật ảnh đại diện</h2>
+    <p class="setting-desc">Chọn ảnh từ máy để cập nhật avatar của bạn.</p>
+
+    <input type="file" id="avatarInput" accept="image/*" />
+    <button id="uploadAvatarBtn">Cập nhật avatar</button>
+  </div>
+
+  <div id="passwordFormBox" class="card account-setting-card hidden">
+    <h2>Đổi mật khẩu</h2>
+    <p class="setting-desc">Mật khẩu mới cần ít nhất 8 ký tự, có chữ hoa, chữ thường và số.</p>
+
+    <input type="password" id="oldPassword" placeholder="Nhập mật khẩu cũ" />
+    <input type="password" id="newPasswordAccount" placeholder="Nhập mật khẩu mới" />
+
+    <button id="changePasswordBtn">Đổi mật khẩu</button>
+  </div>
+
+  <button id="logoutBtn" class="logout-btn">Đăng xuất</button>
+</section>
+
+
+    <!-- Search Modal -->
+<div id="searchModal" class="modal hidden">
+  <div class="modal-content search-modal">
+    <h2>Tìm kiếm giao dịch</h2>
+    <input type="text" id="searchInput" placeholder="Nhập dịch vụ, mã hóa đơn, ghi chú..." />
+    <div id="searchSuggestions" class="search-suggestions"></div>
+    <button id="closeSearchBtn" class="modal-close-btn">×</button>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div id="notificationModal" class="modal hidden">
+  <div class="modal-content notification-modal">
+    <h2>Thông báo ví</h2>
+    <div id="notificationList"></div>
+    <button id="closeNotificationBtn" class="modal-close-btn">×</button>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div id="reportModal" class="modal hidden">
+  <div class="modal-content report-modal">
+    <h2>Báo cáo chi tiết</h2>
+
+    
+
+    <div class="report-detail-summary">
+      <div>
+        <p>Tổng thu</p>
+        <strong id="reportIncome">0 đ</strong>
+      </div>
+      <div>
+        <p>Tổng chi</p>
+        <strong id="reportExpense">0 đ</strong>
+      </div>
+      <div>
+        <p>Chênh lệch</p>
+        <strong id="reportDiff">0 đ</strong>
+      </div>
+    </div>
+
+    <canvas id="detailReportChart"></canvas>
+
+    <button id="closeReportBtn" class="gray-btn">Đóng</button>
+  </div>
+</div>
+
+    <!-- Footer -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="overviewPage">
+        <span>🏠</span>
+        <p>Tổng quan</p>
+      </button>
+
+      <button class="nav-item" data-page="historyPage">
+        <span>📜</span>
+        <p>Giao dịch</p>
+      </button>
+
+      <button class="add-btn" data-page="addPage">
+        <span>+</span>
+      </button>
+
+      <button class="nav-item" data-page="walletPage">
+        <span>👛</span>
+        <p>Ví tiền</p>
+      </button>
+
+      <button class="nav-item" data-page="accountPage">
+        <span>👤</span>
+        <p>Tài khoản</p>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

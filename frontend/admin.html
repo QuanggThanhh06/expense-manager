@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Expense Wallet</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="admin-app">
+    <header class="admin-header">
+      <div>
+        <h1>Admin Panel</h1>
+        <p>Quản trị hệ thống Expense Wallet</p>
+      </div>
+      <button id="adminLogoutBtn">Đăng xuất</button>
+    </header>
+
+    <nav class="admin-tabs">
+      <button class="tab-btn active" data-page="usersPage">Người dùng</button>
+      <button class="tab-btn" data-page="categoriesPage">Danh mục</button>
+      <button class="tab-btn" data-page="notificationsPage">Thông báo</button>
+      <button class="tab-btn" data-page="transactionsPage">Giao dịch</button>
+    </nav>
+
+    <section id="usersPage" class="admin-page active-page">
+      <h2>Quản lý người dùng</h2>
+      <div id="usersList" class="list-box"></div>
+    </section>
+
+    <section id="categoriesPage" class="admin-page">
+      <h2>Quản lý danh mục mặc định</h2>
+
+      <form id="categoryForm" class="admin-card">
+        <input type="hidden" id="categoryId" />
+
+        <input type="text" id="categoryName" placeholder="Tên danh mục" required />
+
+        <select id="categoryType">
+          <option value="expense">Chi tiêu</option>
+          <option value="income">Thu nhập</option>
+        </select>
+
+        <input type="text" id="categoryIcon" placeholder="Icon, ví dụ: 🍽️" />
+        
+
+        <button type="submit" id="saveCategoryBtn">Thêm danh mục</button>
+        <button type="button" id="cancelCategoryEditBtn" class="gray-btn hidden">Hủy sửa</button>
+      </form>
+
+      <div id="categoriesList" class="list-box"></div>
+    </section>
+
+    <section id="notificationsPage" class="admin-page">
+      <h2>Gửi thông báo hệ thống</h2>
+
+      <form id="notificationForm" class="admin-card">
+        <input type="text" id="notificationTitle" placeholder="Tiêu đề thông báo" required />
+        <textarea id="notificationMessage" placeholder="Nội dung thông báo" required></textarea>
+
+        <select id="notificationTarget">
+          <option value="all">Tất cả</option>
+          <option value="users">Người dùng</option>
+          <option value="admins">Admin</option>
+        </select>
+
+        <button type="submit">Gửi thông báo</button>
+      </form>
+
+      <h2>Lịch sử thông báo</h2>
+      <div id="notificationsList" class="list-box"></div>
+    </section>
+
+    <section id="transactionsPage" class="admin-page">
+      <h2>Giao dịch mức an toàn</h2>
+      <p class="safe-note">
+        Admin chỉ xem thông tin an toàn: người dùng, loại giao dịch, mã hóa đơn, trạng thái và thời gian.
+      </p>
+      <div id="safeTransactionsList" class="list-box"></div>
+    </section>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
