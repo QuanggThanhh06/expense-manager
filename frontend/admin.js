@@ -1,4 +1,4 @@
-const API_ADMIN_URL = "http://localhost:5000/api/admin";
+const API_ADMIN_URL = "https://expense-manager-api-2ol5.onrender.com";
 
 const adminUser = JSON.parse(localStorage.getItem("user"));
 

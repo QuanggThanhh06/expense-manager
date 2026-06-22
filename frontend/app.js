@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5000/api/auth";
+const API_BASE_URL = "https://expense-manager-api-2ol5.onrender.com";
 
 // ===============================
 // DOM ELEMENTS
